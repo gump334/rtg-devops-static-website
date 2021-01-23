@@ -1,0 +1,48 @@
+## We only want to deploy when a commit has landed in master
+on:
+  push:
+    branches:
+      - master
+name: Build Gatsby Site
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Here are the AWS secrets that we just added to
+    # our github repo
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      # This github actions checks out the code of our repo
+      # so that the files are available to the action
+      - name: Checkout
+        uses: actions/checkout@v1
+      # I'm using yarn because I like yarn :), but you can use npm just as well
+      - name: Install Dependencies
+        run: yarn
+      # As simple as that, we just use our normal package.json script
+      # to build the site
+      - name: Build Site
+        run: yarn build
+      # Here we run terraform init
+      - name: "Terraform Init"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: "init"
+      # Here we run terraform plan
+      - name: "Terraform Plan"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: "plan"
+      # And terraform apply to configure our s3 resources
+      - name: "Terraform Apply"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: "apply"
+      # Finally, this is how we upload our build to our bucket
+      - uses: chrislennon/action-aws-cli@v1.1
+      - name: sync to s3
+        run: aws s3 sync public s3://jkrsp.com
