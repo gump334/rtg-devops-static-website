@@ -31,8 +31,12 @@ resource "aws_s3_bucket" "b" {
           "Sid": "PublicReadGetObject",
           "Effect": "Allow",
           "Principal": "*",
-          "Action": "s3:GetObject",
-          "Resource": "arn:aws:s3:::blackcloudgeeks-blog.com/*"
+          "Action": [
+            "s3:GetObject",
+            ],
+          "Resource": [
+            "arn:aws:s3:::blackcloudgeeks-blog.com/*"
+            ]
         }
       ]
     }
