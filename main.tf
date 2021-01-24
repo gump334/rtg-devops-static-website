@@ -1,4 +1,7 @@
-
+# This just sets the aws provider default region to us-east-1
+provider "aws" {
+  region = "us-east-1"
+}
 
 
 # This defines how our terraform state is stored. Terraform state
