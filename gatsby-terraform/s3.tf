@@ -5,19 +5,19 @@
 # is a json file that tracks the identifiers and state of our resources
 # this enables terraform to perform state transitions and only change resources
 # which have actually changed. To run terraform apply - we need state.
-# terraform {
-#   backend "s3" {
-#     bucket = "my-terraform-state-bucket"
-#     key    = "my-blog.com.tfstate"
-#     region = "us-east-1"
-#   }
-# }
+terraform {
+  backend "s3" {
+    bucket = "blackcloudgeeks-terraform-state-bucket"
+    key    = "blackcloudgeeks-blog.com.tfstate"
+    region = "us-east-1"
+  }
+}
 
 # Here's our bucket configuration. Pretty simple really
 # It has a name, an acl of "public-read", a public bucket policy
 # and a website configuration.
 resource "aws_s3_bucket" "b" {
-  bucket = "my-blog.com"
+  bucket = "blackcloudgeeks-blog.com"
   acl    = "public-read"
 
   policy = <<POLICY
