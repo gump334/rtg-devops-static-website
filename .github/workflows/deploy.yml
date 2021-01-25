@@ -44,6 +44,10 @@ jobs:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: "apply"
       # Finally, this is how we upload our build to our bucket
-      - uses: chrislennon/action-aws-cli@v1.1
       - name: sync to s3
-        run: aws s3 sync public s3://blackcloudgeeks-blog.com
+        run: |
+          aws s3 sync public s3://blackcloudgeeks-blog.com
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
